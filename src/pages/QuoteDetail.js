@@ -30,7 +30,6 @@ const QuotesDetail = () => {
     </Route>
 
    
-
     <Route path={`/quotes/${params.quoteId}/comments`}>
     <Comments/>
     </Route>
