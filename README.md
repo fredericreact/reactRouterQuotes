@@ -813,3 +813,105 @@ export default Comments;
  
 
 ```
+
+
+# Deploy React Apps
+
+## Lazy Loading : Load code only when it’s needed
+
+<br/>
+
+1. Remove the import 
+
+```javascript
+import NewQuote from './pages/NewQuote';
+```
+
+2. Add New Quote
+
+```javascript
+const NewQuote = React.lazy(()=> import('./pages/NewQuote'));
+```
+
+3. Use <Suspense> to have a callback in case there the component is not loaded yet
+
+```javascript
+import React, {Suspense} from 'react'
+import {Route, Switch, Redirect} from 'react-router-dom'
+import AllQuotes from './pages/AllQuotes';
+import QuotesDetail from './pages/QuoteDetail';
+import Layout from './components/layout/Layout';
+import NotFound from './pages/NotFound';
+import LoadingSpinner from './components/UI/LoadingSpinner';
+ 
+const NewQuote = React.lazy(()=> import('./pages/NewQuote'));
+ 
+function App() {
+  return (
+    <Layout>
+    <Suspense
+    fallback={
+      <div className='centered'>
+        <LoadingSpinner/>
+      </div>
+    }>
+    <Switch>
+ 
+    <Route path='/' exact>
+    <Redirect to='quotes'/>
+    </Route>
+ 
+      <Route path='/quotes' exact>
+      <AllQuotes/>
+      </Route>
+ 
+      <Route path='/quotes/:quoteId'>
+      <QuotesDetail/>  
+      </Route>
+     
+      <Route path='/new-quote'>
+      <NewQuote/>  
+      </Route>  
+ 
+      <Route path='*'>
+      <NotFound/>
+      </Route>
+ 
+    </Switch>
+    </Suspense>
+    </Layout>
+  );
+}
+ 
+export default App;
+ 
+
+```
+
+## Deployment
+
+<br>
+
+```javascript
+npm run build
+```
+
+1. Firebase :  Hosting
+
+2. firebase login > firebase init > Hosting > build > firebase deploy
+
+<br>
+
+>If you want to take down your website : firebase hosting:disable > go to firebase platform to delete
+
+<br>
+
+## Single Page application : 
+
+Le server va ignorer le path , il va charger tous les files html css js 1 fois.
+
+Then les changement de path seront fait par react.
+
+A l’inverse, en general pour chaque path, le serveur va envoyer une nouvelle page
+
+Exemple : www.google.fr/path
